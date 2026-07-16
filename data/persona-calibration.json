@@ -1,0 +1,11 @@
+{
+  "chaos-traveller": { "mean": 8826.8053, "deviation": 2726.8163, "bias": 0.205698 },
+  "food-hunter": { "mean": 5402.6392, "deviation": 1488.0754, "bias": 0.235593 },
+  "luxury-escaper": { "mean": 8637.5915, "deviation": 2072.6973, "bias": 0.110263 },
+  "main-character": { "mean": 9308.5491, "deviation": 2126.9667, "bias": 0.292848 },
+  "fomo-rocketeer": { "mean": 9982.8456, "deviation": 2598.51, "bias": 0.417557 },
+  "soft-life-migrant": { "mean": 3218.9165, "deviation": 1194.2883, "bias": -0.30378 },
+  "social-compass": { "mean": 7444.0875, "deviation": 1665.5762, "bias": -0.394103 },
+  "budget-alchemist": { "mean": 5857.9894, "deviation": 1882.4839, "bias": -0.779243 },
+  "planet-earth-expat": { "mean": 3841.564, "deviation": 1441.9079, "bias": 0.19831 }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Travel Personality Indicator</title>
+  <rect width="512" height="512" rx="112" fill="#17142f"/>
+  <g transform="rotate(-5 256 256)">
+    <rect x="78" y="82" width="368" height="368" rx="88" fill="#7657ff"/>
+    <rect x="58" y="62" width="368" height="368" rx="88" fill="#c8ff55" stroke="#fffdf7" stroke-width="18"/>
+    <path d="M120 142h132v58h-36v176h-60V200h-36z" fill="#17142f"/>
+    <path d="M268 142h76c57 0 88 28 88 78 0 51-32 82-88 82h-16v74h-60zm60 56v50h15c20 0 30-8 30-25 0-17-10-25-30-25z" fill="#17142f"/>
+    <path d="M344 342l82-18v86l-82 18z" fill="#ff4fa3"/>
+  </g>
+</svg>

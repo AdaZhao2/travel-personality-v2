@@ -1,0 +1,194 @@
+[
+  {
+    "id": "whatever",
+    "emoji": "😌",
+    "setup": "群聊里，朋友问：今晚吃什么？",
+    "prompt": "你打出“随便”之后，真实的下一步是？",
+    "options": [
+      { "id": "a", "text": "真随便，谁发定位我去哪", "reaction": "灵魂进入跟随模式", "weights": { "npc": 3, "chaos": 1 } },
+      { "id": "b", "text": "默默否决群里接下来的五个提议", "reaction": "随便，但有边界", "weights": { "control": 3, "npc": 1 } },
+      { "id": "c", "text": "甩出收藏夹里的神秘小店", "reaction": "终于轮到库存出场", "weights": { "chaos": 2, "control": 2, "camera": 1 } },
+      { "id": "d", "text": "看谁请客再决定意见", "reaction": "经济基础决定味蕾", "weights": { "spend": 1, "control": 2, "hype": 1 } }
+    ]
+  },
+  {
+    "id": "holiday",
+    "emoji": "🗓️",
+    "setup": "系统通知：明天突然放假一天。",
+    "prompt": "你的大脑第一反应？",
+    "options": [
+      { "id": "a", "text": "睡到自然醒，世界与我无关", "reaction": "电量保护模式开启", "weights": { "npc": 2, "spend": 1 } },
+      { "id": "b", "text": "搜“周边高铁 2 小时能去哪”", "reaction": "人还在床上，心已出发", "weights": { "hype": 3, "chaos": 2 } },
+      { "id": "c", "text": "先看天气、票价、人流和攻略", "reaction": "假期只有一天，表格可以有四页", "weights": { "control": 3, "spend": 1 } },
+      { "id": "d", "text": "约朋友拍一组“逃离工位”大片", "reaction": "放假可以短，素材不能少", "weights": { "camera": 3, "hype": 2 } }
+    ]
+  },
+  {
+    "id": "leave-now",
+    "emoji": "📱",
+    "setup": "微信突然弹出一句：“现在出门吗？”",
+    "prompt": "你的回复速度取决于什么？",
+    "options": [
+      { "id": "a", "text": "不问去哪，先回“冲”", "reaction": "目的地不详，肾上腺素已到账", "weights": { "hype": 3, "chaos": 2 } },
+      { "id": "b", "text": "先问都有谁，再决定人格", "reaction": "社交阵容决定皮肤", "weights": { "npc": 2, "control": 2 } },
+      { "id": "c", "text": "洗头了就去，没洗就失联", "reaction": "仪式感拥有一票否决权", "weights": { "camera": 3, "npc": 1 } },
+      { "id": "d", "text": "发出一串：去哪、多久、几点回", "reaction": "出门前先完成尽调", "weights": { "control": 3, "npc": 1 } }
+    ]
+  },
+  {
+    "id": "sold-out",
+    "emoji": "🚨",
+    "setup": "页面显示：仅剩最后 2 个名额。",
+    "prompt": "你的手会？",
+    "options": [
+      { "id": "a", "text": "先付款，问题留给未来的我", "reaction": "未来的你已发来律师函", "weights": { "hype": 3, "spend": 2 } },
+      { "id": "b", "text": "截图发群里，等一个人劝我", "reaction": "需要的不是意见，是许可", "weights": { "npc": 2, "hype": 2 } },
+      { "id": "c", "text": "开三个平台比价再说", "reaction": "最后两个名额也得接受审计", "weights": { "control": 3, "spend": 1 } },
+      { "id": "d", "text": "关掉页面：这是消费主义陷阱", "reaction": "钱包为你的清醒鼓掌", "weights": { "control": 2, "npc": 1 } }
+    ]
+  },
+  {
+    "id": "photo-dump",
+    "emoji": "📸",
+    "setup": "朋友发来 186 张刚拍的照片。",
+    "prompt": "你会怎么处理？",
+    "options": [
+      { "id": "a", "text": "原图全收，今晚开始九宫格海选", "reaction": "选片是一项严肃的人生工程", "weights": { "camera": 3, "control": 2 } },
+      { "id": "b", "text": "挑一张最丑的做表情包", "reaction": "素材价值被重新定义", "weights": { "chaos": 3, "camera": 1 } },
+      { "id": "c", "text": "点开前三张，然后忘记这件事", "reaction": "相册容量逃过一劫", "weights": { "npc": 2, "hype": 1 } },
+      { "id": "d", "text": "问：能不能请专业修图师救一下", "reaction": "问题可以解决，只是需要预算", "weights": { "spend": 3, "camera": 2 } }
+    ]
+  },
+  {
+    "id": "queue",
+    "emoji": "🧍",
+    "setup": "一家网红店排队 90 分钟。",
+    "prompt": "你站在队尾时在想什么？",
+    "options": [
+      { "id": "a", "text": "来都来了，这四个字值 90 分钟", "reaction": "沉没成本开始接管身体", "weights": { "hype": 3, "npc": 2 } },
+      { "id": "b", "text": "找黄牛/加价套餐，时间也是钱", "reaction": "用预算击穿物理排队", "weights": { "spend": 3, "control": 1 } },
+      { "id": "c", "text": "研究附近评分 4.7 的替代品", "reaction": "你的 B 计划比 A 计划更完整", "weights": { "control": 3, "chaos": 1 } },
+      { "id": "d", "text": "拍完门头就走，证明来过即可", "reaction": "完成了精神层面的消费", "weights": { "camera": 3, "chaos": 1 } }
+    ]
+  },
+  {
+    "id": "group-chat",
+    "emoji": "👥",
+    "setup": "八人群聊计划一件事，七个人已读不回。",
+    "prompt": "你是哪一个？",
+    "options": [
+      { "id": "a", "text": "第八个已读不回的人", "reaction": "组织者的眼泪与你无关", "weights": { "npc": 3 } },
+      { "id": "b", "text": "直接发投票和截止时间", "reaction": "民主是有 deadline 的", "weights": { "control": 3, "npc": 1 } },
+      { "id": "c", "text": "发红包，抢到的人必须回复", "reaction": "以资本撬动基层治理", "weights": { "spend": 2, "chaos": 3 } },
+      { "id": "d", "text": "私聊最靠谱的人另起炉灶", "reaction": "项目已进入秘密双人董事会", "weights": { "control": 2, "chaos": 2 } }
+    ]
+  },
+  {
+    "id": "upgrade",
+    "emoji": "✨",
+    "setup": "只要多花 299，就能升级“尊享体验”。",
+    "prompt": "哪句话最容易说服你？",
+    "options": [
+      { "id": "a", "text": "一生可能就这一次", "reaction": "这句话一年出现二十次", "weights": { "spend": 3, "hype": 2 } },
+      { "id": "b", "text": "可以少排 40 分钟队", "reaction": "时间正式被明码标价", "weights": { "spend": 2, "control": 3 } },
+      { "id": "c", "text": "有专属拍照机位", "reaction": "299 买的是朋友圈生产力", "weights": { "camera": 3, "spend": 2 } },
+      { "id": "d", "text": "谁都说服不了我", "reaction": "尊享的是没花钱的快乐", "weights": { "control": 2, "npc": 1 } }
+    ]
+  },
+  {
+    "id": "viral",
+    "emoji": "🔥",
+    "setup": "刷到一个“现在不去就晚了”的视频。",
+    "prompt": "你通常停在哪一步？",
+    "options": [
+      { "id": "a", "text": "收藏，转发，永远不再打开", "reaction": "收藏夹是第二座互联网坟场", "weights": { "npc": 2, "hype": 2 } },
+      { "id": "b", "text": "当天就开始查日期和价格", "reaction": "算法已成功操控现实世界", "weights": { "hype": 3, "control": 2 } },
+      { "id": "c", "text": "研究同款穿搭和拍摄角度", "reaction": "地点只是内容生产基地", "weights": { "camera": 3, "hype": 1 } },
+      { "id": "d", "text": "评论区搜“避雷”", "reaction": "种草之前先种怀疑", "weights": { "control": 3 } }
+    ]
+  },
+  {
+    "id": "lost",
+    "emoji": "🧭",
+    "setup": "你发现自己走错路了。",
+    "prompt": "最符合你的反应是？",
+    "options": [
+      { "id": "a", "text": "假装这是我故意设计的路线", "reaction": "只要不承认，就不算迷路", "weights": { "chaos": 3, "camera": 1 } },
+      { "id": "b", "text": "立刻原路返回，误差不能扩大", "reaction": "人生允许偏航 30 米", "weights": { "control": 3 } },
+      { "id": "c", "text": "跟着人多的方向走", "reaction": "群众路线永不过时", "weights": { "npc": 3 } },
+      { "id": "d", "text": "看起来不错，继续走走看", "reaction": "错误路线获得正式编制", "weights": { "chaos": 3, "hype": 1 } }
+    ]
+  },
+  {
+    "id": "dress-code",
+    "emoji": "👕",
+    "setup": "朋友说：“穿舒服点就行。”",
+    "prompt": "你会如何理解“舒服”？",
+    "options": [
+      { "id": "a", "text": "卫衣拖鞋，字面理解", "reaction": "语言的朴素信徒", "weights": { "npc": 2 } },
+      { "id": "b", "text": "带三套，现场看光线决定", "reaction": "舒服的是拥有选择权", "weights": { "camera": 3, "control": 2 } },
+      { "id": "c", "text": "临出门买一套新的", "reaction": "旧衣服无法承载新故事", "weights": { "spend": 3, "hype": 2, "camera": 1 } },
+      { "id": "d", "text": "问清每个人穿什么再选", "reaction": "拒绝成为合照里的异类", "weights": { "npc": 3, "camera": 1 } }
+    ]
+  },
+  {
+    "id": "menu",
+    "emoji": "🍜",
+    "setup": "菜单上有一道完全看不懂的菜。",
+    "prompt": "你会点吗？",
+    "options": [
+      { "id": "a", "text": "点，人生需要一点随机伤害", "reaction": "胃部已签署风险告知书", "weights": { "chaos": 3, "hype": 2 } },
+      { "id": "b", "text": "看隔壁桌实物再决定", "reaction": "田野调查正在进行", "weights": { "control": 2, "npc": 2 } },
+      { "id": "c", "text": "如果最贵，可能有它的道理", "reaction": "价格被误认为品质说明书", "weights": { "spend": 3, "hype": 1 } },
+      { "id": "d", "text": "先确认摆盘是否上镜", "reaction": "味觉排在视觉后面候场", "weights": { "camera": 3, "control": 1 } }
+    ]
+  },
+  {
+    "id": "rain",
+    "emoji": "🌧️",
+    "setup": "精心计划的一天突然下大雨。",
+    "prompt": "你的 Plan B 是？",
+    "options": [
+      { "id": "a", "text": "Plan B 到 F 早已写在备忘录", "reaction": "天气只能修改，不能取消", "weights": { "control": 3 } },
+      { "id": "b", "text": "穿雨衣照冲，甚至更有氛围", "reaction": "暴雨自动升级成电影滤镜", "weights": { "chaos": 2, "camera": 2, "hype": 1 } },
+      { "id": "c", "text": "找个舒服地方躺到雨停", "reaction": "老天替你批准了摆烂", "weights": { "spend": 2, "npc": 1 } },
+      { "id": "d", "text": "等群里最强的人做决定", "reaction": "决策权已安全托管", "weights": { "npc": 3 } }
+    ]
+  },
+  {
+    "id": "late",
+    "emoji": "🏃",
+    "setup": "离约定时间还有 10 分钟，你还在家。",
+    "prompt": "此时你会？",
+    "options": [
+      { "id": "a", "text": "打车，并相信奇迹", "reaction": "城市交通承受了不该有的期待", "weights": { "spend": 2, "hype": 2, "chaos": 1 } },
+      { "id": "b", "text": "发“快到了”，开始穿鞋", "reaction": "语言先于肉身抵达", "weights": { "chaos": 3, "npc": 1 } },
+      { "id": "c", "text": "不可能，我一般提前 20 分钟到", "reaction": "时间管理本人发言", "weights": { "control": 3 } },
+      { "id": "d", "text": "先问大家到了没，法不责众", "reaction": "迟到也需要群体安全感", "weights": { "npc": 3, "control": 1 } }
+    ]
+  },
+  {
+    "id": "main-character",
+    "emoji": "🎬",
+    "setup": "耳机里突然放到你的本命 BGM。",
+    "prompt": "街上的你会发生什么变化？",
+    "options": [
+      { "id": "a", "text": "步伐自动卡点，世界变成 MV", "reaction": "路人已被临时聘为群演", "weights": { "camera": 3, "hype": 2 } },
+      { "id": "b", "text": "音量调大，顺便多绕一圈", "reaction": "目的性输给了氛围感", "weights": { "chaos": 2, "hype": 2 } },
+      { "id": "c", "text": "分享给朋友：懂的都懂", "reaction": "情绪需要联网才算完整", "weights": { "npc": 2, "camera": 1 } },
+      { "id": "d", "text": "无变化，我正在赶时间", "reaction": "BGM 不能干扰项目进度", "weights": { "control": 3 } }
+    ]
+  },
+  {
+    "id": "final-button",
+    "emoji": "🛫",
+    "setup": "面前有一个按钮：按下就会去一个未知地方三天。",
+    "prompt": "你最后会怎么做？",
+    "options": [
+      { "id": "a", "text": "立刻按，犹豫就会败北", "reaction": "未知地点已收到你的报名表", "weights": { "chaos": 3, "hype": 3 } },
+      { "id": "b", "text": "问朋友按不按，对方按我就按", "reaction": "冒险需要一个连带责任人", "weights": { "npc": 3, "chaos": 1 } },
+      { "id": "c", "text": "先问住宿标准和是否报销", "reaction": "未知可以，预算不能未知", "weights": { "spend": 2, "control": 3 } },
+      { "id": "d", "text": "按之前先架好相机录像", "reaction": "人生转折必须有竖屏素材", "weights": { "camera": 3, "hype": 2 } }
+    ]
+  }
+]

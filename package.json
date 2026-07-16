@@ -1,0 +1,40 @@
+{
+  "name": "travel-personality-indicator",
+  "version": "2.0.0",
+  "private": true,
+  "description": "A share-first travel personality quiz with local deterministic analysis.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "analyze:balance": "node scripts/analyze-persona-balance.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "framer-motion": "^12.18.1",
+    "lucide-react": "^1.24.0",
+    "next": "^16.2.10",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "qrcode": "^1.5.4",
+    "recharts": "^3.9.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "@types/node": "^22.15.32",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "autoprefixer": "^10.4.21",
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3"
+  }
+}
