@@ -1,12 +1,14 @@
 # Travel Personality Indicator · V2
 
+[在线体验](https://carolineli352.github.io/travel-personality-v2/) · [原版 V1](https://carolineli352.github.io/travel-personality/)
+
 一个为分享而生的旅行人格测试。用户通过 16 道互联网行为题，得到旅行人格代码、几何动物形象、六维雷达图、固定多方案 AI 总结、异世界目的地和现实航班推荐。
 
 ![Travel Personality Indicator V2 Social Preview](public/social-preview.png)
 
 > 不需要 OpenAI API，也不需要环境变量。计分、人格匹配、文案组合、海报和二维码全部在浏览器本地生成。
 
-V2 是仓库中的独立 Next.js 应用，不会覆盖根目录的原版测试。
+这是从 Travel Personality 原仓库独立出来的 Next.js 版本。V1 保留在原仓库，两版拥有完全独立的代码、测试和部署流程。
 
 ## 产品体验
 
@@ -132,7 +134,7 @@ npx playwright install chromium
 ## 目录结构
 
 ```text
-v2/
+.
 ├── app/                 # 页面、Metadata、Favicon 和全局样式
 ├── components/          # 首页、问卷、等待态、雷达图和结果页
 ├── data/                # 问题、人格、目的地和校准数据
@@ -145,14 +147,21 @@ v2/
 └── tests/               # Playwright 自动化测试
 ```
 
-## 部署到 Vercel
+## 部署到 GitHub Pages
 
-1. 在 Vercel 导入本仓库。
-2. 将 **Root Directory** 设置为 `v2`。
-3. Framework Preset 选择 **Next.js**。
-4. 直接部署，不需要配置 API Key 或其他环境变量。
+`main` 分支的每次推送都会触发 `.github/workflows/pages.yml`：先执行类型检查与完整浏览器测试，再静态导出并部署到 GitHub Pages。
 
-生产版本不包含 `/api/analyze`。所有结果逻辑都随前端代码运行。
+线上地址：<https://carolineli352.github.io/travel-personality-v2/>
+
+本地验证静态导出：
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/travel-personality-v2 \
+NEXT_PUBLIC_SITE_ORIGIN=https://carolineli352.github.io \
+npm run build
+```
+
+输出位于 `out/`。生产版本不包含 `/api/analyze`，也不需要 API Key 或运行时服务器。
 
 ## 修改内容
 

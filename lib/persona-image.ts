@@ -1,3 +1,4 @@
 export function personaImageSrc(personaId: string) {
-  return `/personas/${personaId}-geometric-v2.png`;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  return `${basePath}/personas/${personaId}-geometric-v2.png`;
 }
