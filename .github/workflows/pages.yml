@@ -40,6 +40,7 @@ jobs:
 
       - name: Run checks
         run: |
+          npm run lint
           npm run typecheck
           npm test
 
@@ -50,6 +51,8 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: /travel-personality-v2
           NEXT_PUBLIC_SITE_ORIGIN: https://carolineli352.github.io
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Upload Pages artifact

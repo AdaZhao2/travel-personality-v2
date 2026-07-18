@@ -6,7 +6,7 @@
 
 ![Travel Personality Indicator V2 Social Preview](public/social-preview.png)
 
-> 不需要 OpenAI API，也不需要环境变量。计分、人格匹配、文案组合、海报和二维码全部在浏览器本地生成。
+> 不需要 OpenAI API。计分、人格匹配、文案组合、海报和二维码全部在浏览器本地生成；可选的匿名使用统计需要 Supabase 环境变量。
 
 这是从 Travel Personality 原仓库独立出来的 Next.js 版本。V1 保留在原仓库，两版拥有完全独立的代码、测试和部署流程。
 
@@ -64,9 +64,10 @@
 - 分享 URL 可完整恢复人格、六维分数和总结方案
 - Hash 直接显示在 URL 末尾，方便复制和保存
 - 生成固定 `1080 × 1440` PNG 人格海报
-- 海报包含人格形象、Travel DNA 四档等级、AI 总结、目的地和二维码
+- 海报包含人格形象、Travel DNA 五格符号条、AI 总结、目的地和二维码
 - 生成后先预览，再保存或打开系统社交分享
 - 二维码只邀请朋友重新测试，不公开答题记录
+- 好友完成测试后，按六维分数差异生成 0–100% Friend Match、最合拍分项和互相无语点
 - `1200 × 630` Social Preview 已接入 Open Graph 与 Twitter Card
 
 这里的“AI 总结”是产品语气，不代表运行时模型调用。总结由本地规则和固定文案池按答题路径稳定组合，相同答案会得到相同结果。
@@ -109,6 +110,10 @@ npx playwright install chromium
 
 当前测试覆盖完整 16 题流程、人格概率、无性别文案、目的地目录、分享链接、结果 Hash、人格海报、二维码和社交分享回退。
 
+## 匿名使用统计（可选）
+
+配置 Supabase 后，页面会匿名记录测试开始、每题选择、完成结果、重测和分享事件。未配置时统计自动停用，不影响测试流程。数据库初始化、GitHub Secrets 和查询方式见 [统计配置说明](docs/ANALYTICS.md)。
+
 ## 技术实现
 
 - Next.js 16
@@ -128,6 +133,7 @@ npx playwright install chromium
 - [`lib/scoring.ts`](lib/scoring.ts)：归一化计分和人格匹配
 - [`lib/analysis.ts`](lib/analysis.ts)：固定多方案总结生成器
 - [`lib/share.ts`](lib/share.ts)：分享编码、Hash 和剪贴板回退
+- [`lib/friend-match.ts`](lib/friend-match.ts)：好友匹配度、邀请快照和调侃规则
 - [`lib/poster.ts`](lib/poster.ts)：人格海报和二维码
 - [`components/result.tsx`](components/result.tsx)：结果展示与分享交互
 

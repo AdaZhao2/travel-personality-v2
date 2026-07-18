@@ -1,5 +1,6 @@
 import QRCode from "qrcode";
-import { dimensionLevel, dimensions } from "@/lib/constants";
+import { dimensionLevel, dimensions, englishDimensionLabels } from "@/lib/constants";
+import type { Language } from "@/lib/i18n";
 import { personaImageSrc } from "@/lib/persona-image";
 import type { Analysis, Persona, Scores, World } from "@/lib/types";
 
@@ -20,6 +21,7 @@ type PosterInput = {
   analysis: Analysis;
   inviteUrl: string;
   resultHash: string;
+  language?: Language;
 };
 
 function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
@@ -34,9 +36,26 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: n
 }
 
 function textLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number) {
+  const value = String(text).trim();
+  if (/\s/.test(value)) {
+    const lines: string[] = [];
+    let line = "";
+    for (const word of value.split(/\s+/)) {
+      const candidate = line ? `${line} ${word}` : word;
+      if (line && ctx.measureText(candidate).width > maxWidth) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = candidate;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
   const lines: string[] = [];
   let line = "";
-  for (const character of Array.from(text)) {
+  for (const character of Array.from(value)) {
     const candidate = `${line}${character}`;
     if (line && ctx.measureText(candidate).width > maxWidth) {
       lines.push(line.trimEnd());
@@ -62,7 +81,10 @@ function wrappedText(
   const allLines = textLines(ctx, String(text), maxWidth);
   if (allLines.length > maxLines && lines.length) {
     let last = lines[lines.length - 1];
-    while (last && ctx.measureText(`${last}…`).width > maxWidth) last = last.slice(0, -1);
+    while (last && ctx.measureText(`${last}…`).width > maxWidth) {
+      const withoutLastWord = last.replace(/\s+\S+$/, "");
+      last = withoutLastWord === last ? last.slice(0, -1) : withoutLastWord;
+    }
     lines[lines.length - 1] = `${last}…`;
   }
   lines.forEach((line, index) => ctx.fillText(line, x, y + index * lineHeight));
@@ -76,6 +98,7 @@ function fitFont(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, 
     if (ctx.measureText(text).width <= maxWidth) return size;
     size -= 4;
   } while (size > minSize);
+  ctx.font = `900 ${minSize}px ${FONT}`;
   return minSize;
 }
 
@@ -94,7 +117,8 @@ function loadImage(src: string) {
   });
 }
 
-export async function generatePersonalityPoster({ persona, world, scores, analysis, inviteUrl, resultHash }: PosterInput) {
+export async function generatePersonalityPoster({ persona, world, scores, analysis, inviteUrl, resultHash, language = "zh" }: PosterInput) {
+  const en = language === "en";
   const canvas = document.createElement("canvas");
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
@@ -149,7 +173,7 @@ export async function generatePersonalityPoster({ persona, world, scores, analys
   ctx.stroke();
   ctx.fillStyle = INK;
   ctx.font = `900 24px ${FONT}`;
-  ctx.fillText("你的旅行人格是", 24, 38);
+  ctx.fillText(en ? "YOUR TRAVEL TYPE" : "你的旅行人格是", 24, 38);
   ctx.restore();
 
   ctx.fillStyle = INK;
@@ -176,8 +200,9 @@ export async function generatePersonalityPoster({ persona, world, scores, analys
   ctx.font = `900 32px ${FONT}`;
   ctx.fillText(persona.name.toUpperCase(), 108, 416);
   ctx.fillStyle = INK;
-  ctx.font = `800 28px ${FONT}`;
-  ctx.fillText(`代码翻译：${persona.codeMeaning}`, 108, 460);
+  const codeMeaning = `${en ? "IN HUMAN TERMS: " : "代码翻译："}${persona.codeMeaning}`;
+  fitFont(ctx, codeMeaning, 840, 28, 19);
+  ctx.fillText(codeMeaning, 108, 460);
   ctx.fillStyle = "#514d63";
   ctx.font = `700 30px ${FONT}`;
   wrappedText(ctx, persona.tagline, 108, 508, 840, 42, 2);
@@ -199,8 +224,8 @@ export async function generatePersonalityPoster({ persona, world, scores, analys
     roundRect(ctx, x, y, 258, 58, 16);
     ctx.fill();
     ctx.fillStyle = INK;
-    ctx.font = `800 21px ${FONT}`;
-    ctx.fillText(`${dimension.emoji} ${dimension.label}`, x + 16, y + 37);
+    ctx.font = `800 ${en ? 17 : 21}px ${FONT}`;
+    ctx.fillText(`${dimension.emoji} ${en ? englishDimensionLabels[dimension.id] : dimension.label}`, x + 16, y + 37);
     ctx.textAlign = "right";
     ctx.font = `900 24px ${FONT}`;
     ctx.fillStyle = PURPLE;
@@ -215,13 +240,16 @@ export async function generatePersonalityPoster({ persona, world, scores, analys
   ctx.lineWidth = 4;
   ctx.stroke();
   ctx.fillStyle = INK;
-  ctx.font = `900 25px ${FONT}`;
-  ctx.fillText(`AI 总结 · ${analysis.strategy}`, 126, 882);
+  const summaryHeading = `${en ? "AI SUMMARY" : "AI 总结"} · ${analysis.strategy}`;
+  fitFont(ctx, summaryHeading, 820, 25, 19);
+  ctx.fillText(summaryHeading, 126, 882);
   ctx.font = `900 34px ${FONT}`;
   const posterNarrative = analysis.narrative.find((line) => line.emphasis)?.text ?? analysis.roast;
-  wrappedText(ctx, posterNarrative, 126, 934, 820, 46, 2);
-  ctx.font = `800 24px ${FONT}`;
-  ctx.fillText(`代表台词：“${analysis.signatureLine}”`, 126, 1050);
+  const narrativeBottom = wrappedText(ctx, posterNarrative, 126, 934, 820, en ? 46 : 50, 2);
+  const signature = `${en ? "SIGNATURE: " : "代表台词："}“${analysis.signatureLine}”`;
+  fitFont(ctx, signature, 820, 24, 17);
+  const signatureY = en ? 1050 : Math.min(1050, narrativeBottom + 38);
+  ctx.fillText(signature, 126, signatureY);
 
   ctx.fillStyle = INK;
   roundRect(ctx, 92, 1110, 590, 210, 32);
@@ -249,8 +277,9 @@ export async function generatePersonalityPoster({ persona, world, scores, analys
   ctx.drawImage(qr, 728, 1106, 226, 226);
   ctx.fillStyle = INK;
   ctx.textAlign = "center";
-  ctx.font = `900 20px ${FONT}`;
-  ctx.fillText("扫码测你的旅行人格", 841, 1370);
+  const qrLabel = en ? "SCAN TO TAKE THE QUIZ" : "扫码测你的旅行人格";
+  fitFont(ctx, qrLabel, 240, 20, 15);
+  ctx.fillText(qrLabel, 841, 1370);
   ctx.textAlign = "left";
 
   return canvasBlob(canvas);

@@ -50,3 +50,23 @@ test("uniform answer choices give every persona a comparable result probability"
     expect(percentage, persona).toBeLessThan(12.4);
   });
 });
+
+test("display positions distribute every scoring dimension across A to D", () => {
+  const dimensions = ["npc", "chaos", "hype", "spend", "camera", "control"];
+  const questions = require("../data/questions.json");
+  const optionOrder = require("../data/option-order.json");
+
+  expect(Object.keys(optionOrder).sort()).toEqual(questions.map((question) => question.id).sort());
+  questions.forEach((question) => {
+    expect([...optionOrder[question.id]].sort(), question.id).toEqual(question.options.map((option) => option.id).sort());
+  });
+
+  dimensions.forEach((dimension) => {
+    const totals = [0, 1, 2, 3].map((position) => questions.reduce((sum, question) => {
+      const optionId = optionOrder[question.id][position];
+      const option = question.options.find((item) => item.id === optionId);
+      return sum + (option.weights[dimension] ?? 0);
+    }, 0));
+    expect(Math.max(...totals) - Math.min(...totals), `${dimension}: ${totals.join("/")}`).toBeLessThanOrEqual(2);
+  });
+});

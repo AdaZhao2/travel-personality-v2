@@ -38,12 +38,12 @@
   {
     "id": "sold-out",
     "emoji": "🚨",
-    "setup": "页面显示：仅剩最后 2 个名额。",
-    "prompt": "你的手会？",
+    "setup": "旅行平台提醒：",
+    "prompt": "发现一张超低价机票，你会？",
     "options": [
       { "id": "a", "text": "先付款，问题留给未来的我", "reaction": "未来的你已发来律师函", "weights": { "hype": 3, "spend": 2 } },
       { "id": "b", "text": "截图发群里，等一个人劝我", "reaction": "需要的不是意见，是许可", "weights": { "npc": 2, "hype": 2 } },
-      { "id": "c", "text": "开三个平台比价再说", "reaction": "最后两个名额也得接受审计", "weights": { "control": 3, "spend": 1 } },
+      { "id": "c", "text": "开三个平台比价再说", "reaction": "超低价也得接受审计", "weights": { "control": 3, "spend": 1 } },
       { "id": "d", "text": "关掉页面：这是消费主义陷阱", "reaction": "钱包为你的清醒鼓掌", "weights": { "control": 2, "npc": 1 } }
     ]
   },
@@ -170,13 +170,13 @@
   {
     "id": "main-character",
     "emoji": "🎬",
-    "setup": "耳机里突然放到你的本命 BGM。",
-    "prompt": "街上的你会发生什么变化？",
+    "setup": "朋友突然把手机镜头转向你：“来，拍个开场。”",
+    "prompt": "接下来的三秒，你会？",
     "options": [
-      { "id": "a", "text": "步伐自动卡点，世界变成 MV", "reaction": "路人已被临时聘为群演", "weights": { "camera": 3, "hype": 2 } },
-      { "id": "b", "text": "音量调大，顺便多绕一圈", "reaction": "目的性输给了氛围感", "weights": { "chaos": 2, "hype": 2 } },
-      { "id": "c", "text": "分享给朋友：懂的都懂", "reaction": "情绪需要联网才算完整", "weights": { "npc": 2, "camera": 1 } },
-      { "id": "d", "text": "无变化，我正在赶时间", "reaction": "BGM 不能干扰项目进度", "weights": { "control": 3 } }
+      { "id": "a", "text": "立刻找光找角度，三秒进入营业状态", "reaction": "镜头一开，主角自动上线", "weights": { "camera": 3, "hype": 2 } },
+      { "id": "b", "text": "顺手加戏，临时演一段离谱剧情", "reaction": "素材没有脚本，但有野心", "weights": { "chaos": 2, "hype": 2 } },
+      { "id": "c", "text": "把旁边的人一起拉进镜头", "reaction": "独角戏不如群像热闹", "weights": { "npc": 2, "camera": 1 } },
+      { "id": "d", "text": "先问拍多久、发哪里、要说什么", "reaction": "开拍之前先完成需求对齐", "weights": { "control": 3 } }
     ]
   },
   {

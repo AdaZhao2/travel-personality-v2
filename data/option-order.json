@@ -1,0 +1,18 @@
+{
+  "whatever": ["b", "a", "d", "c"],
+  "holiday": ["d", "c", "b", "a"],
+  "leave-now": ["d", "c", "a", "b"],
+  "sold-out": ["d", "a", "c", "b"],
+  "photo-dump": ["d", "c", "b", "a"],
+  "queue": ["d", "c", "a", "b"],
+  "group-chat": ["d", "c", "a", "b"],
+  "upgrade": ["a", "d", "c", "b"],
+  "viral": ["d", "a", "c", "b"],
+  "lost": ["c", "d", "b", "a"],
+  "dress-code": ["d", "c", "b", "a"],
+  "menu": ["a", "d", "b", "c"],
+  "rain": ["d", "a", "c", "b"],
+  "late": ["a", "c", "b", "d"],
+  "main-character": ["d", "a", "c", "b"],
+  "final-button": ["a", "b", "c", "d"]
+}
