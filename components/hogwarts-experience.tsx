@@ -58,8 +58,8 @@ const hogwartsTickets: HogwartsTicket[] = [
 ];
 
 const hogwartsStops: HogwartsStop[] = [
-  { id: "boathouse", name: "黑湖船屋", image: "/hogwarts-checkins/boathouse-short-hair-v3.webp", time: "21:00", route: "从船屋上岸，沿石阶进入城堡侧门。", activity: "先拍一张入校第一视角，证明你真的从黑湖路线抵达。", stamp: "Black Lake Arrival", color: "linear-gradient(145deg, #0f766e, #172554)", x: "16%", y: "72%" },
-  { id: "great-hall", name: "礼堂", image: "/hogwarts-checkins/great-hall-short-hair-v3.webp", time: "21:25", route: "穿过门厅进入礼堂，按长桌灯光找到晚宴席位。", activity: "抬头看天花板，拍下今晚的魔法天气和开学晚宴。", stamp: "Great Hall Feast", color: "linear-gradient(145deg, #92400e, #7c2d12)", x: "33%", y: "48%" },
+  { id: "boathouse", name: "黑湖船屋", image: "/hogwarts-checkins/boathouse-short-hair-v4.webp", time: "21:00", route: "从船屋上岸，沿石阶进入城堡侧门。", activity: "先拍一张入校第一视角，证明你真的从黑湖路线抵达。", stamp: "Black Lake Arrival", color: "linear-gradient(145deg, #0f766e, #172554)", x: "16%", y: "72%" },
+  { id: "great-hall", name: "礼堂", image: "/hogwarts-checkins/great-hall-short-hair-v4.webp", time: "21:25", route: "穿过门厅进入礼堂，按长桌灯光找到晚宴席位。", activity: "抬头看天花板，拍下今晚的魔法天气和开学晚宴。", stamp: "Great Hall Feast", color: "linear-gradient(145deg, #92400e, #7c2d12)", x: "33%", y: "48%" },
   { id: "staircase", name: "移动楼梯", image: "/hogwarts-checkins/moving-staircase.webp", time: "22:05", route: "从礼堂外侧上楼，等楼梯停稳后再换向。", activity: "记录一次路线重算现场，适合发给所有爱规划的人。", stamp: "Moving Staircase", color: "linear-gradient(145deg, #4338ca, #701a75)", x: "51%", y: "30%" },
   { id: "library", name: "图书馆", image: "/hogwarts-checkins/library.webp", time: "22:35", route: "沿画像走廊右转，保持安静进入高书架区。", activity: "生成一张深夜攻略感照片，标题就叫“明天也许会按计划走”。", stamp: "Library Route Plan", color: "linear-gradient(145deg, #4a044e, #713f12)", x: "70%", y: "38%" },
   { id: "astronomy", name: "天文塔", image: "/hogwarts-checkins/astronomy-tower.webp", time: "23:10", route: "从图书馆继续向上，抵达最适合收尾的高处视角。", activity: "把城堡、星空和你的隐藏世界探索者编号一起收进夜景打卡图。", stamp: "Astronomy Tower", color: "linear-gradient(145deg, #020617, #312e81)", x: "84%", y: "16%" },
