@@ -6,6 +6,16 @@ export type SharedResultPayload = {
   a?: string;
 };
 
+const maxEncodedPayloadLength = 4096;
+
+function isScores(value: unknown): value is Scores {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  return dimensionIds.every((dimension) => {
+    const score = (value as Record<string, unknown>)[dimension];
+    return typeof score === "number" && Number.isFinite(score) && score >= 0 && score <= 100;
+  });
+}
+
 function toBase64Url(value: string) {
   const bytes = new TextEncoder().encode(value);
   let binary = "";
@@ -26,7 +36,22 @@ export function encodeSharedResult(payload: SharedResultPayload) {
 }
 
 export function decodeSharedResult(value: string): SharedResultPayload {
-  return JSON.parse(fromBase64Url(value)) as SharedResultPayload;
+  if (!value || value.length > maxEncodedPayloadLength) throw new Error("Invalid shared result payload");
+  const payload: unknown = JSON.parse(fromBase64Url(value));
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    throw new Error("Invalid shared result payload");
+  }
+  const { p, s, a } = payload as Record<string, unknown>;
+  if (
+    typeof p !== "string"
+    || p.length === 0
+    || p.length > 64
+    || !isScores(s)
+    || (a !== undefined && (typeof a !== "string" || !/^[a-d]{0,16}$/.test(a)))
+  ) {
+    throw new Error("Invalid shared result payload");
+  }
+  return { p, s, ...(typeof a === "string" ? { a } : {}) };
 }
 
 export function createResultHash(personaId: string, scores: Scores, answerPath: string) {

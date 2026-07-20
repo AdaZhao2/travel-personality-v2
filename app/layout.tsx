@@ -6,11 +6,11 @@ const siteOrigin = process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "http://localhost:3000
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin),
-  title: "Travel Personality Indicator｜毒舌算法看穿你的旅行人格",
-  description: "16 道不正经选择题，用本地趣味规则测出你的旅行人格、异世界目的地和现实出发方案。",
+  title: "Travel Personality Indicator｜AI算法看穿你的旅行人格",
+  description: "16 道不正经选择题，用本地趣味规则测出你的旅行人格、异世界目的地和现实出发方案",
   openGraph: {
     title: "Travel Personality Indicator",
-    description: "16 道互联网行为题，测出你的旅行人格。",
+    description: "16 道互联网行为题，测出你的旅行人格",
     type: "website",
     locale: "zh_CN",
     url: `${basePath}/`,
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Travel Personality Indicator",
-    description: "16 道互联网行为题，测出你的旅行人格。",
+    description: "16 道互联网行为题，测出你的旅行人格",
     images: [`${basePath}/social-preview.png`],
   },
 };

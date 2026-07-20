@@ -1,5 +1,6 @@
 import { dimensionLabels } from "@/lib/constants";
 import { getTopDimensions } from "@/lib/scoring";
+import type { Language } from "@/lib/i18n";
 import type { Analysis, Answer, DimensionId, Persona, Scores, World } from "@/lib/types";
 
 const strategies = [
@@ -47,9 +48,9 @@ const punchlines: Record<DimensionId, string[]> = {
 const personaNarratives: Record<string, { lines: { text: string; emphasis?: boolean }[]; signatureLine: string }> = {
   "chaos-traveller": {
     lines: [
-      { text: "别人在完成主线。" },
-      { text: "你在疯狂解锁隐藏剧情。", emphasis: true },
-      { text: "去东京三天，有两天都在计划之外。" },
+      { text: "别人收藏景点。" },
+      { text: "你收藏意外。", emphasis: true },
+      { text: "攻略只负责出发，不负责结局。" },
       { text: "AI 不建议和你一起旅行。" },
       { text: "因为计划基本没有生还可能。", emphasis: true },
     ],
@@ -162,15 +163,20 @@ export function createRuleBasedAnalysis(
   persona: Persona,
   world: World,
   answers: Answer[] = [],
+  language: Language = "zh",
 ): Analysis {
   const seed = hashAnswers(answers, scores);
   const variant = seed % strategies.length;
+  if (language === "en") return createEnglishAnalysis(scores, persona, world, seed, variant);
   const strategy = strategies[variant];
   const [first, second, lowest] = getTopDimensions(scores);
   const worldReasons = [
-    `你的「${dimensionLabels[first]} × ${dimensionLabels[second]}」组合已经超过普通城市承载范围。理论上，${world.name} 才是你的常驻服务器。`,
-    `综合你的${dimensionLabels[first]}和${dimensionLabels[second]}浓度，现实目的地只能算平替，${world.name} 才是完整版。`,
-    `系统把你的旅行参数输入现实世界，返回“配置过高”。换到 ${world.name}，一切突然合理。`,
+    `你的画风已经不属于现实世界。理论上，${world.name}才是你的常驻服务器。`,
+    `综合你的精神状态，现实目的地只能算平替，${world.name}才是完整版。`,
+    `你的旅行设定已经成功跨服。下一站：${world.name}。`,
+    `AI 找遍了整个现实世界，最后发现：${world.name}更像你的老家。`,
+    `系统推荐：建议切换服务器至 ${world.name}，体验更加流畅。`,
+    `AI 已为你匹配最佳世界观。恭喜解锁：${world.name}。`,
   ];
   const narrative = personaNarratives[persona.id] ?? {
     lines: [{ text: `${persona.tagline}`, emphasis: true }],
@@ -186,13 +192,56 @@ export function createRuleBasedAnalysis(
     signatureLine: narrative.signatureLine,
     travelAdvice: `最适合你的，是${persona.travelStyle}。${getRhythm(scores)} 旅伴请锁定${getCompanion(persona, scores, lowest)}`,
     worldReason: pick(worldReasons, seed, 4),
-    destinationReasons: world.destinations.map((destination, index) => {
-      const endings = [
-        `很适合你 ${scores[first]} 分的「${dimensionLabels[first]}」发挥。`,
-        `既接得住「${dimensionLabels[first]}」，又不会把「${dimensionLabels[lowest]}」逼到加班。`,
-        `这是 ${world.name} 在现实世界里最容易订到票的替身之一。`,
-      ];
-      return `${destination.city}：${destination.reason} ${destination.connection} ${endings[(variant + index) % endings.length]}`;
-    }),
+    destinationReasons: world.destinations.map(
+      (destination) => `${destination.city}：${destination.reason} ${destination.connection}`,
+    ),
+  };
+}
+
+const englishStrategies = [
+  ["Travel behaviour scan", "AI reviewed your answers and immediately found the habit your friends complain about in private."],
+  ["Financial impulse audit", "Sixteen choices later, the system confirms your common sense is mostly employed in an advisory capacity."],
+  ["Pre-emptive incident report", "AI simulated one trip with you and has already opened a case number."],
+  ["Content operations review", "The evidence suggests you do not go on holiday. You launch a limited series."],
+  ["Travel companion risk review", "AI read your answers from your future travel partner’s perspective and quietly upgraded the insurance."],
+  ["Alternative-universe relocation", "The real world cannot meet your travel requirements. The system is checking other servers."],
+] as const;
+
+const englishPunchlines: Record<DimensionId, string[]> = {
+  npc: ["You don’t avoid decisions. You simply believe they belong to whoever brought the spreadsheet.", "Your ‘I’m easy’ translates to: ‘Wake me when a competent adult has chosen.’", "Pair you with one decisive friend and you will appear at the fun with almost supernatural accuracy."],
+  chaos: ["You have never been lost. You have, however, discovered several routes Google was too cowardly to suggest.", "Rain, missed trains, and minor disasters are acceptable if they improve the story later.", "The itinerary writes the pilot episode. By Day Two, you have replaced the entire writers’ room."],
+  hype: ["You see ‘only two left’ and suddenly your bank card has main-character agency.", "Some people need three working days to decide. You need one red countdown timer.", "Your common sense is not absent. It simply arrives after the confirmation email."],
+  spend: ["You are not bad with money. You are deeply committed to not being uncomfortable on principle.", "If an upgrade buys sleep, skips a queue, or improves the lighting, your wallet would like a seat at the table.", "You don’t overspend. You make strategic investments in not having a terrible time."],
+  camera: ["Your sense of direction is negotiable. Your awareness of golden hour is military-grade.", "You may forget the monument’s name, but you know exactly which side had better light.", "Your camera roll is not storage. It is an unreleased content slate."],
+  control: ["You say ‘let’s keep it spontaneous’ with three backup routes already downloaded.", "Even your free time has a meeting point, buffer window, and cancellation policy.", "Other people use Maps to find the city. You use Maps to acquire it."],
+};
+
+const englishNarratives: Record<string, { lines: { text: string; emphasis?: boolean }[]; signatureLine: string }> = {
+  "chaos-traveller": { lines: [{text:"Other people collect landmarks."},{text:"You collect incidents that require a group-chat debrief.",emphasis:true},{text:"The guidebook gets you through the opening credits. After that, the plot is legally unsupervised."},{text:"AI would not travel with you."},{text:"AI would absolutely watch the recap.",emphasis:true}], signatureLine:"Well, we’re here now." },
+  "food-hunter": { lines: [{text:"Other people fit restaurants around the itinerary. You fit the city between lunch and dinner."},{text:"Your holiday begins at the first bite, not the departure gate.",emphasis:true},{text:"AI found three museums marked ‘maybe’ and eleven restaurants marked ‘non-negotiable’."}], signatureLine:"Let’s eat, then emotionally prepare for more food." },
+  "luxury-escaper": { lines: [{text:"You are not against hardship. You simply refuse to pay for the privilege."},{text:"If money can fix it, it does not need to become character development.",emphasis:true},{text:"Your system is simple: the view changes your life; the hotel puts it back together."}], signatureLine:"What exactly does the upgrade include?" },
+  "main-character": { lines: [{text:"Other people look at the view. You and the view wait for better light."},{text:"The itinerary is optional. The one photo that looks accidental but took 43 attempts is not.",emphasis:true},{text:"AI suspects cities do not host you. They audition for your carousel."}], signatureLine:"Again. That one looked posed." },
+  "fomo-rocketeer": { lines: [{text:"Other people wait for annual leave. You wait for Friday evening and a countdown timer."},{text:"By the time they ask ‘is it worth it?’, you have booked, packed, and posted the airport coffee.",emphasis:true},{text:"AI recommends a ten-minute cooling-off period. The early-bird offer expires in nine."}], signatureLine:"Book it. We can panic afterwards." },
+  "soft-life-migrant": { lines: [{text:"Other people need a holiday after their holiday."},{text:"You have bravely removed the middleman and made resting the main event.",emphasis:true},{text:"AI reviewed your route: bed, coffee, gentle wander, heroic return to bed."}], signatureLine:"Do they do late checkout?" },
+  "social-compass": { lines: [{text:"You have never made a full itinerary, yet somehow keep appearing on excellent trips."},{text:"Your greatest travel hack is having organised friends.",emphasis:true},{text:"AI found two settings in your operating system:"},{text:"‘Sounds good.’",emphasis:true},{text:"‘Whatever works.’",emphasis:true}], signatureLine:"Send me the pin. I’ll be there." },
+  "budget-alchemist": { lines: [{text:"Other people plan a holiday. You run a small transport ministry."},{text:"You will spend eight hours to save £18—and feel spiritually richer for it.",emphasis:true},{text:"AI found no flaws in the itinerary. It did find six friends still reading version four."}], signatureLine:"Ignore the old PDF. I’ve sent FINAL-v7." },
+  "planet-earth-expat": { lines: [{text:"The more notifications a city has, the more urgently you need a mountain."},{text:"Other people fear losing signal. You fear arriving at the viewpoint with everyone else.",emphasis:true},{text:"AI cannot reach you. This appears to be exactly how you wanted it."}], signatureLine:"No signal. Perfect." },
+};
+
+function createEnglishAnalysis(scores: Scores, persona: Persona, world: World, seed: number, variant: number): Analysis {
+  const [first, second] = getTopDimensions(scores);
+  const narrative = englishNarratives[persona.id] ?? { lines: [{ text: persona.tagline, emphasis: true }], signatureLine: "We’re already here." };
+  const rhythm = scores.control >= 70 ? "Lock in the important bits, then leave 30% of the day unsupervised. Not every walk needs a project plan." : scores.hype >= 70 ? "Give each day one headline event—and give every limited-time offer a ten-minute cooling-off period." : scores.camera >= 70 ? "Build around the light: slow morning, flexible afternoon, union-protected golden hour." : scores.spend >= 70 ? "Move less, enjoy more, and spend only where it buys back time, sleep, or genuine delight." : scores.npc >= 70 ? "Let one organised person lead, but perform the sacred duties of replying and turning up on time." : "Give each day one main quest. Weather, appetite, and strange little streets can write the side plots.";
+  const worldReasons = [`Your travel settings have exceeded Earth’s recommended limits. Your natural habitat is clearly ${world.name}.`, `Reality has some decent alternatives, but ${world.name} is the version with all features unlocked.`, `Your holiday energy has crossed into another franchise. Next stop: ${world.name}.`, `AI searched the entire real world and reluctantly concluded that ${world.name} is more your speed.`, `System recommendation: migrate to ${world.name} for better personality compatibility.`, `The matching engine briefly caught fire, then returned one answer: ${world.name}.`];
+  return {
+    variant: variant + 1,
+    strategy: englishStrategies[variant][0],
+    opening: englishStrategies[variant][1],
+    roast: `${pick(englishPunchlines[first], seed, 1)} ${pick(englishPunchlines[second], seed, 2)}`,
+    narrative: narrative.lines,
+    signatureLine: narrative.signatureLine,
+    travelAdvice: `Your ideal trip: ${persona.travelStyle}. ${rhythm} Best paired with ${persona.companion}.`,
+    worldReason: pick(worldReasons, seed, 4),
+    destinationReasons: world.destinations.map((destination) => `${destination.city}: ${destination.reason} ${destination.connection}`),
   };
 }

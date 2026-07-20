@@ -1,13 +1,19 @@
 "use client";
 
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
-import { dimensions } from "@/lib/constants";
+import { useId } from "react";
+import { dimensions, englishDimensionLabels } from "@/lib/constants";
+import type { Language } from "@/lib/i18n";
 import type { Scores } from "@/lib/types";
 
-export function PersonalityRadar({ scores }: { scores: Scores }) {
-  const data = dimensions.map((dimension) => ({ name: `${dimension.emoji} ${dimension.label}`, value: scores[dimension.id], fullMark: 100 }));
+export function PersonalityRadar({ scores, language = "zh" }: { scores: Scores; language?: Language }) {
+  const descriptionId = useId();
+  const data = dimensions.map((dimension) => ({ name: `${dimension.emoji} ${language === "en" ? englishDimensionLabels[dimension.id] : dimension.label}`, value: scores[dimension.id], fullMark: 100 }));
   return (
-    <div className="h-[350px] w-full sm:h-[430px] lg:h-[440px]" aria-label="旅行人格六维雷达图">
+    <div className="h-[350px] w-full sm:h-[430px] lg:h-[440px]" role="img" aria-label={language === "en" ? "Six-dimension travel personality radar chart" : "旅行人格六维雷达图"} aria-describedby={descriptionId}>
+      <ul id={descriptionId} className="sr-only">
+        {data.map((item) => <li key={item.name}>{item.name}: {item.value} / 100</li>)}
+      </ul>
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data} outerRadius="72%">
           <PolarGrid stroke="#17142f" strokeOpacity={.22} />

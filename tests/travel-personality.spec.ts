@@ -1,11 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { skyscannerUrl } from "../lib/scoring";
+import { questions, skyscannerUrl } from "../lib/scoring";
 import { createResultHash } from "../lib/share";
+import { calculateFriendMatch, decodeFriendSnapshot, encodeFriendSnapshot } from "../lib/friend-match";
+import { createRuleBasedAnalysis } from "../lib/analysis";
+import { getPersona, getWorld } from "../data/catalog";
 import { dimensionLevel } from "../lib/constants";
 
-test("turns numeric travel DNA scores into share-friendly levels", () => {
-  expect([0, 39, 40, 59, 60, 79, 80, 100].map(dimensionLevel)).toEqual([
-    "低调", "低调", "在线", "在线", "高能", "高能", "爆表", "爆表",
+test("turns numeric travel DNA scores into five-cell symbol meters", () => {
+  expect([0, 1, 39, 40, 59, 60, 79, 80, 100].map(dimensionLevel)).toEqual([
+    "□□□□□", "■□□□□", "■■□□□", "■■□□□", "■■■□□", "■■■□□", "■■■■□", "■■■■□", "■■■■■",
   ]);
 });
 
@@ -15,6 +18,33 @@ test("creates a stable result hash from persona, scores and answers", () => {
   expect(first).toMatch(/^#TPI-[0-9A-F]{8}$/);
   expect(createResultHash("chaos-traveller", scores, "aaaaaaaaaaaaaaaa")).toBe(first);
   expect(createResultHash("chaos-traveller", scores, "baaaaaaaaaaaaaaa")).not.toBe(first);
+});
+
+test("calculates friend match from the six real score differences", () => {
+  const first = { npc: 25, chaos: 100, hype: 80, spend: 40, camera: 55, control: 10 };
+  const identical = calculateFriendMatch(first, first);
+  expect(identical.percentage).toBe(100);
+  expect(identical.closest.difference).toBe(0);
+
+  const opposite = calculateFriendMatch(first, { npc: 75, chaos: 0, hype: 20, spend: 60, camera: 45, control: 90 });
+  expect(opposite.percentage).toBe(47);
+  expect(opposite.friction.dimension).toBe("chaos");
+
+  const encoded = encodeFriendSnapshot({ p: "chaos-traveller", s: first });
+  expect(encoded).toMatch(/^[A-Za-z0-9_-]+$/);
+  expect(decodeFriendSnapshot(encoded)).toEqual({ p: "chaos-traveller", s: first });
+});
+
+test("ends destination copy after its catalog connection", () => {
+  const persona = getPersona("fomo-rocketeer");
+  const world = getWorld(persona.worldId);
+  const scores = { npc: 37, chaos: 45, hype: 69, spend: 30, camera: 21, control: 11 };
+  const analysis = createRuleBasedAnalysis(scores, persona, world);
+
+  expect(analysis.destinationReasons).toEqual(world.destinations.map(
+    (destination) => `${destination.city}：${destination.reason} ${destination.connection}`,
+  ));
+  expect(analysis.destinationReasons.join(" ")).not.toMatch(/很适合你|逼到加班|最容易订到票的替身/);
 });
 
 test("builds China and UK departure links from the interface language", () => {
@@ -27,6 +57,60 @@ test("builds China and UK departure links from the interface language", () => {
   expect(Object.fromEntries(en.searchParams)).toMatchObject({
     origin: "UK", destination: "EDI", market: "UK", locale: "en-GB", currency: "GBP",
   });
+});
+
+test("keeps primary screens inside narrow and wide viewports", async ({ page }) => {
+  const scores = { npc: 25, chaos: 100, hype: 80, spend: 40, camera: 55, control: 10 };
+  const result = Buffer.from(JSON.stringify({ p: "chaos-traveller", s: scores, a: "aaaaaaaaaaaaaaaa" })).toString("base64url");
+  const match = Buffer.from(JSON.stringify({ p: "fomo-rocketeer", s: { ...scores, chaos: 80, control: 30 } })).toString("base64url");
+
+  for (const viewport of [
+    { width: 320, height: 568 },
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 1440, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(viewport.width);
+
+    await page.getByRole("button", { name: /开始暴露自己/ }).click();
+    await expect(page.getByTestId("question")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(viewport.width);
+
+    await page.goto(`/?result=${result}&match=${match}`);
+    await expect(page.getByTestId("friend-match")).toBeAttached();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(viewport.width);
+    if (viewport.width < 390) await expect(page.getByTestId("result-edition")).toBeHidden();
+    else await expect(page.getByTestId("result-edition")).toBeVisible();
+  }
+
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto(`/?result=${result}`);
+  await page.getByRole("button", { name: "生成人格海报" }).click();
+  const dialog = page.getByRole("dialog", { name: "人格海报预览" });
+  await expect(dialog).toBeVisible();
+  const dialogBounds = await dialog.boundingBox();
+  expect(dialogBounds?.x).toBeGreaterThanOrEqual(0);
+  expect((dialogBounds?.x ?? 0) + (dialogBounds?.width ?? 0)).toBeLessThanOrEqual(320);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+});
+
+test("previews an option reaction on hover without showing a check", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /开始暴露自己/ }).click();
+
+  const option = page.getByTestId("answer-a");
+  const reaction = page.getByText(questions[0].options[0].reaction, { exact: true });
+  await expect(reaction).toHaveCount(0);
+
+  await option.hover();
+  await expect(reaction).toBeVisible();
+  await expect(option.locator("svg")).toHaveCount(0);
+
+  await option.click();
+  await expect(option.locator("svg")).toHaveCount(1, { timeout: 250 });
 });
 
 test("completes the 16-question experience and renders a shareable result", async ({ page }) => {
@@ -53,6 +137,8 @@ test("completes the 16-question experience and renders a shareable result", asyn
   await expect(page.getByText(/方案 [1-6] ·/)).toBeVisible();
   await expect(page.getByTestId("travel-advice")).toContainText("旅行建议");
   await expect(page.getByTestId("travel-advice")).not.toContainText(/\d+ 分/);
+  await expect(page.getByText(/很适合你 \d+ 分的/)).toHaveCount(0);
+  await expect(page.getByText(/逼到加班/)).toHaveCount(0);
   await expect(page.getByText("互联网行为小票")).toHaveCount(0);
   await expect(page.getByText("旅行处方")).toHaveCount(0);
   await expect(page.getByTestId("persona-code")).toHaveText(/^(JOKER|FOOD|RICH|C位|FOMO|ZZZZ|NPC|GPS|404)$/);
@@ -83,6 +169,34 @@ test("opens an invited quiz with a neutral invitation", async ({ page }) => {
   await page.goto("/?from=chaos-traveller");
   await expect(page.getByText(/Chaos Traveller.*邀请你来对答案/)).toBeVisible();
   await expect(page.getByText(/伟大航路/)).toHaveCount(1); // teaser card only; no inviter result disclosure
+});
+
+test("renders a score-based friend match from an invitation snapshot", async ({ page }) => {
+  const scores = { npc: 25, chaos: 100, hype: 80, spend: 40, camera: 55, control: 10 };
+  const result = Buffer.from(JSON.stringify({ p: "chaos-traveller", s: scores, a: "aaaaaaaaaaaaaaaa" })).toString("base64url");
+  const match = Buffer.from(JSON.stringify({ p: "fomo-rocketeer", s: { ...scores, chaos: 80, control: 30 } })).toString("base64url");
+  await page.goto(`/?result=${result}&match=${match}`);
+
+  await expect(page.getByTestId("friend-match-percentage")).toHaveText("93%");
+  await expect(page.getByTestId("friend-match")).toContainText("JOKER × FOMO");
+  await expect(page.getByTestId("friend-match")).toContainText("最合拍分项");
+  await expect(page.getByTestId("friend-match")).toContainText("最容易互相无语");
+});
+
+test("creates a private-score match invitation without the answer path", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: "http://127.0.0.1:4173" });
+  await page.addInitScript(() => Object.defineProperty(navigator, "share", { configurable: true, value: undefined }));
+  const scores = { npc: 25, chaos: 100, hype: 80, spend: 40, camera: 55, control: 10 };
+  const result = Buffer.from(JSON.stringify({ p: "chaos-traveller", s: scores, a: "aaaaaaaaaaaaaaaa" })).toString("base64url");
+  await page.goto(`/?result=${result}`);
+  await page.getByRole("button", { name: "邀请朋友来测" }).click();
+
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  const invite = new URL(copied.match(/https?:\/\/\S+/)?.[0] ?? copied);
+  expect(invite.searchParams.get("from")).toBe("chaos-traveller");
+  expect(invite.searchParams.has("result")).toBe(false);
+  const snapshot = decodeFriendSnapshot(String(invite.searchParams.get("match")));
+  expect(snapshot).toEqual({ p: "chaos-traveller", s: scores });
 });
 
 test("keeps old Airport Dad links working after its persona merge", async ({ page }) => {
@@ -136,6 +250,6 @@ test("copies a URL-safe result link that restores the shared result", async ({ p
   await expect(receiver.getByTestId("persona-code")).toHaveText("JOKER");
   await expect(receiver.getByTestId("result-hash")).toHaveText(/^#TPI-[0-9A-F]{8}$/);
   await expect(receiver.getByText("AI 总结", { exact: true })).toBeVisible();
-  await expect(receiver.getByText("你在疯狂解锁隐藏剧情。")).toBeVisible();
+  await expect(receiver.getByTestId("persona-narrative")).toContainText("别人收藏景点。");
   await expect(receiver.getByText("“来都来了。”")).toBeVisible();
 });

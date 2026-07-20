@@ -1,9 +1,10 @@
 import questionsData from "@/data/questions.json";
 import { personas } from "@/data/catalog";
 import calibrationData from "@/data/persona-calibration.json";
+import { validateQuestions } from "@/lib/question-data";
 import { dimensionIds, type Answer, type Persona, type Question, type Scores } from "@/lib/types";
 
-export const questions = questionsData as Question[];
+export const questions = validateQuestions(questionsData) as Question[];
 
 const zeros = (): Scores => ({ npc: 0, chaos: 0, hype: 0, spend: 0, camera: 0, control: 0 });
 

@@ -11,9 +11,12 @@ export const dimensions: Array<{ id: DimensionId; label: string; emoji: string; 
 
 export const dimensionLabels = Object.fromEntries(dimensions.map((item) => [item.id, item.label])) as Record<DimensionId, string>;
 
+export const englishDimensionLabels: Record<DimensionId, string> = {
+  npc: "Follow", chaos: "Chaos", hype: "Hype", spend: "Spend", camera: "Camera", control: "Control",
+};
+
 export function dimensionLevel(score: number) {
-  if (score >= 80) return "爆表";
-  if (score >= 60) return "高能";
-  if (score >= 40) return "在线";
-  return "低调";
+  const normalized = Number.isFinite(score) ? Math.max(0, Math.min(100, score)) : 0;
+  const filled = normalized === 0 ? 0 : Math.ceil(normalized / 20);
+  return `${"■".repeat(filled)}${"□".repeat(5 - filled)}`;
 }

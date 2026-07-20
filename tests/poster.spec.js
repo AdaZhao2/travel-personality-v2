@@ -30,6 +30,7 @@ test("generates a fixed poster with a working invitation QR code", async ({ page
   expect(invite.origin).toBe(new URL(page.url()).origin);
   expect(invite.searchParams.get("from")).toBe("chaos-traveller");
   expect(invite.searchParams.has("result")).toBe(false);
+  expect(invite.searchParams.get("match")).toMatch(/^[A-Za-z0-9_-]+$/);
 });
 
 test("shares exactly one poster file without duplicate clipboard representations", async ({ page }) => {

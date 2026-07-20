@@ -112,7 +112,10 @@ export const personas: Persona[] = [
 ];
 
 export function getPersona(id: string) {
-  const aliases: Record<string, string> = {
+  return findPersona(id) ?? personas[0];
+}
+
+const personaAliases: Record<string, string> = {
     "airport-dad": "budget-alchemist",
     "airport-guardian": "budget-alchemist",
     "weekend-goblin": "fomo-rocketeer",
@@ -123,9 +126,11 @@ export function getPersona(id: string) {
     "off-grid-oracle": "planet-earth-expat",
     "hidden-gem-collector": "planet-earth-expat",
     "culture-time-traveller": "budget-alchemist",
-  };
-  const resolvedId = aliases[id] ?? id;
-  return personas.find((persona) => persona.id === resolvedId) ?? personas[0];
+};
+
+export function findPersona(id: string) {
+  const resolvedId = personaAliases[id] ?? id;
+  return personas.find((persona) => persona.id === resolvedId);
 }
 
 export function getWorld(id: string) {

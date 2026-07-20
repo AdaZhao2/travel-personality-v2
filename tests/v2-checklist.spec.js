@@ -118,8 +118,10 @@ test("all 9 persona images load successfully", async ({ page }) => {
     await expect(imgLocator).toHaveAttribute("src", new RegExp(expectedSrc.replace(/\./g, "\\.")));
 
     // Verify the image actually loads (no broken-image state).
-    const naturalWidth = await imgLocator.evaluate((img) => img.naturalWidth);
-    expect(naturalWidth, `${code} persona image naturalWidth`).toBeGreaterThan(0);
+    await expect.poll(
+      () => imgLocator.evaluate((img) => img.complete ? img.naturalWidth : 0),
+      { message: `${code} persona image naturalWidth` },
+    ).toBeGreaterThan(0);
   }
 });
 
@@ -355,19 +357,26 @@ test.describe("corrupt or invalid ?result= payloads fall back to hero", () => {
     });
   }
 
-  test("out-of-bounds scores (>100 / negative) still produce a valid result", async ({ page }) => {
-    // The app should clamp or accept out-of-range values without crashing.
+  test("out-of-bounds scores are rejected", async ({ page }) => {
     const payload = encodePayload({
       p: "chaos-traveller",
       s: { npc: -50, chaos: 999, hype: 80, spend: 40, camera: 55, control: 10 },
       a: "aaaaaaaaaaaaaaaa",
     });
     await page.goto(`/?result=${encodeURIComponent(payload)}`);
-    // Either result renders (with whatever persona the engine picks) or falls
-    // back to hero — it must not crash or show a blank page.
-    const onResult = page.getByTestId("persona-code");
-    const onHero   = page.getByRole("button", { name: /开始暴露自己/ });
-    await expect(onResult.or(onHero)).toBeVisible();
+    await expect(page.getByRole("button", { name: /开始暴露自己/ })).toBeVisible();
+    await expect.poll(() => new URL(page.url()).searchParams.has("result")).toBe(false);
+  });
+
+  test("unknown persona IDs are rejected instead of silently becoming JOKER", async ({ page }) => {
+    const payload = encodePayload({
+      p: "not-a-real-persona",
+      s: { npc: 25, chaos: 100, hype: 80, spend: 40, camera: 55, control: 10 },
+      a: "aaaaaaaaaaaaaaaa",
+    });
+    await page.goto(`/?result=${encodeURIComponent(payload)}`);
+    await expect(page.getByRole("button", { name: /开始暴露自己/ })).toBeVisible();
+    await expect.poll(() => new URL(page.url()).searchParams.has("result")).toBe(false);
   });
 
   test("answer path missing entirely still produces a valid result", async ({ page }) => {
@@ -438,6 +447,7 @@ test("poster contains the correct persona image, result hash and invite QR code"
   // expose the full answer payload.
   expect(qrUrl.searchParams.get("from")).toBe("planet-earth-expat");
   expect(qrUrl.searchParams.has("result")).toBe(false);
+  expect(qrUrl.searchParams.get("match")).toMatch(/^[A-Za-z0-9_-]+$/);
 });
 
 test("poster preview image matches the persona shown on the result page", async ({ page }) => {
