@@ -103,11 +103,11 @@ const configs: Record<ThemedWorldId, Config> = {
       { kind: "酷乐湖假日票", service: "GOO LAGOON · 海底度假线", from: "水母田", to: "酷乐湖 / 树屋圆顶", depart: "16:20", arrive: "19:10", duration: "傍晚", note: "带好防晒和第二个胃，朋友们已经准备了一整晚的临时计划。" },
     ],
     stops: [
-      { id: "pineapple-home", name: "菠萝屋", companion: "海绵宝宝", image: "/bikini-bottom-checkins/pineapple-home.webp", time: "09:30", route: "从贝壳路向东，在最大的菠萝门前按三次门铃。", activity: "和海绵宝宝站在菠萝屋前，拍下今天快乐营业的第一张照片。", stamp: "PINEAPPLE HOME", x: "12%", y: "65%" },
-      { id: "krab-restaurant", name: "蟹堡餐厅", companion: "红蟹餐厅老板", image: "/bikini-bottom-checkins/krab-restaurant.webp", time: "11:40", route: "沿锚形路牌前进，闻到烤汉堡香味时立刻右转。", activity: "拿着招牌汉堡在餐厅门口留影，证明景点可以错过但饭点没有。", stamp: "KRABBY LUNCH", x: "31%", y: "31%" },
-      { id: "jellyfish-fields", name: "水母田", companion: "章鱼音乐家", image: "/bikini-bottom-checkins/jellyfish-fields.webp", time: "14:20", route: "穿过珊瑚拱门进入粉色草地，跟随音乐寻找温和水母群。", activity: "让章鱼音乐家的旋律和水母一起入镜，拍一张意外和谐的合影。", stamp: "JELLY JAM", x: "50%", y: "58%" },
-      { id: "goo-lagoon", name: "酷乐湖", companion: "粉红海星", image: "/bikini-bottom-checkins/goo-lagoon.webp", time: "16:50", route: "乘泡泡巴士到沙滩站，下车后跟着欢呼声走到遮阳伞区。", activity: "和粉红海星并肩看海底日落，把什么都不做变成今日重点。", stamp: "GOO HOLIDAY", x: "69%", y: "72%" },
-      { id: "tree-dome", name: "树屋圆顶", companion: "松鼠科学家", image: "/bikini-bottom-checkins/tree-dome.webp", time: "19:15", route: "从酷乐湖沿玻璃管道向北，进入圆顶前戴好水下头盔。", activity: "与松鼠科学家在海底树屋前完成团体照，为荒唐又快乐的一天收尾。", stamp: "BEST DAY EVER", x: "88%", y: "25%" },
+      { id: "pineapple-home", name: "菠萝屋", companion: "海绵宝宝", image: "/bikini-bottom-checkins/pineapple-home.webp", time: "09:30", route: "从贝壳路向东，在最大的菠萝门前按三次门铃。", activity: "和海绵宝宝站在菠萝屋前，拍下今天快乐营业的第一张照片。", stamp: "PINEAPPLE HOME", x: "21%", y: "22%" },
+      { id: "krab-restaurant", name: "蟹堡餐厅", companion: "红蟹餐厅老板", image: "/bikini-bottom-checkins/krab-restaurant.webp", time: "11:40", route: "沿锚形路牌前进，闻到烤汉堡香味时立刻右转。", activity: "拿着招牌汉堡在餐厅门口留影，证明景点可以错过但饭点没有。", stamp: "KRABBY LUNCH", x: "79%", y: "22%" },
+      { id: "jellyfish-fields", name: "水母田", companion: "章鱼音乐家", image: "/bikini-bottom-checkins/jellyfish-fields.webp", time: "14:20", route: "穿过珊瑚拱门进入粉色草地，跟随音乐寻找温和水母群。", activity: "让章鱼音乐家的旋律和水母一起入镜，拍一张意外和谐的合影。", stamp: "JELLY JAM", x: "50%", y: "50%" },
+      { id: "goo-lagoon", name: "酷乐湖", companion: "粉红海星", image: "/bikini-bottom-checkins/goo-lagoon.webp", time: "16:50", route: "乘泡泡巴士到沙滩站，下车后跟着欢呼声走到遮阳伞区。", activity: "和粉红海星并肩看海底日落，把什么都不做变成今日重点。", stamp: "GOO HOLIDAY", x: "22%", y: "76%" },
+      { id: "tree-dome", name: "树屋圆顶", companion: "松鼠科学家", image: "/bikini-bottom-checkins/tree-dome.webp", time: "19:15", route: "从酷乐湖沿玻璃管道向北，进入圆顶前戴好水下头盔。", activity: "与松鼠科学家在海底树屋前完成团体照，为荒唐又快乐的一天收尾。", stamp: "BEST DAY EVER", x: "80%", y: "77%" },
     ],
   },
 };
