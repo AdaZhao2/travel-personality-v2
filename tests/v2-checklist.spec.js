@@ -215,7 +215,79 @@ test("flight links use UK departure when page lang is set to English", async ({ 
 });
 
 // ---------------------------------------------------------------------------
-// 5. Legacy share-link migration: retired persona IDs redirect to retained ones
+// 5. Hidden world: Hogwarts admission itinerary
+// ---------------------------------------------------------------------------
+
+test("hidden Hogwarts world can generate an admission itinerary order", async ({ page }) => {
+  const payload = PERSONA_PAYLOADS["main-character"];
+  await page.goto(resultUrl(payload));
+  await expect(page.getByTestId("persona-code")).toHaveText("C位");
+
+  await expect(page.getByRole("button", { name: /进入隐藏世界/ })).toHaveCount(0);
+  const screwIds = ["top-left", "top-right", "bottom-left", "bottom-right"];
+  await page.getByTestId("hidden-world-screw-top-left").hover();
+  await expect(page.getByTestId("hidden-world-screw-top-left")).toHaveCSS("cursor", /url/);
+  for (const screwId of screwIds) {
+    await page.getByTestId(`hidden-world-screw-${screwId}`).click();
+  }
+  await expect(page.getByTestId("hogwarts-world")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Hogwarts/ })).toBeVisible();
+  await expect(page.getByText("隐藏世界探索者 · 彩蛋已解锁")).toBeVisible();
+  await expect(page.getByText(/无论你的旅行人格是什么，只要拆下虚拟世界的四枚螺丝/)).toBeVisible();
+  let url = new URL(page.url());
+  expect(url.pathname).toBe("/hogwarts/");
+  expect(url.searchParams.get("stage")).toBe("world");
+  expect(url.hash).toBe("#hogwarts");
+
+  await page.getByRole("button", { name: /领取你的入校通行证/ }).click();
+  const order = page.getByTestId("hogwarts-order");
+  await expect(order).toBeVisible();
+  await expect.poll(() => order.evaluate((node) => Math.abs(node.getBoundingClientRect().top))).toBeLessThan(80);
+  url = new URL(page.url());
+  expect(url.pathname).toBe("/hogwarts/");
+  expect(url.searchParams.get("stage")).toBe("order");
+  expect(url.hash).toBe("#hogwarts-order");
+  await expect(order.getByText("地铁票")).toBeVisible();
+  await expect(order.getByText("高铁票")).toBeVisible();
+  await expect(order.getByText("船票")).toBeVisible();
+  await expect(order.getByText("伦敦国王十字车站 9 又 3/4 站台")).toBeVisible();
+  await expect(order.getByText("霍格莫德车站", { exact: true })).toBeVisible();
+  await expect(order.getByText("霍格沃兹船屋")).toBeVisible();
+
+  const inspectionButton = order.getByRole("button", { name: /3 张票待验/ });
+  await inspectionButton.hover();
+  await expect(order.getByText("开始验票")).toBeVisible();
+  await order.getByRole("button", { name: /开始验票/ }).click();
+  await expect(page.getByTestId("hogwarts-map")).toBeVisible();
+  url = new URL(page.url());
+  expect(url.searchParams.get("stage")).toBe("map");
+  expect(url.hash).toBe("#hogwarts-map");
+  await page.getByRole("button", { name: /礼堂/ }).click();
+  await expect(page.getByTestId("checkin-image")).toBeVisible();
+  await expect(page.getByLabel("礼堂 打卡图片")).toBeVisible();
+  url = new URL(page.url());
+  expect(url.searchParams.get("stage")).toBe("checkin");
+  expect(url.searchParams.get("spot")).toBe("great-hall");
+  expect(url.hash).toBe("#hogwarts-checkin");
+
+  const checkinUrl = page.url();
+  await page.goto(checkinUrl);
+  await expect(page.getByTestId("hogwarts-map")).toBeVisible();
+  await expect(page.getByLabel("礼堂 打卡图片")).toBeVisible();
+
+  await page.getByTestId("return-reality").click();
+  const realitySection = page.getByTestId("reality-section");
+  await expect(realitySection).toBeVisible();
+  await expect.poll(() => realitySection.evaluate((node) => Math.abs(node.getBoundingClientRect().top))).toBeLessThan(80);
+  url = new URL(page.url());
+  expect(url.pathname).toBe("/");
+  expect(url.searchParams.has("stage")).toBe(false);
+  expect(url.searchParams.has("spot")).toBe(false);
+  expect(url.hash).toMatch(/^#TPI-[0-9A-F]{8}$/);
+});
+
+// ---------------------------------------------------------------------------
+// 6. Legacy share-link migration: retired persona IDs redirect to retained ones
 // ---------------------------------------------------------------------------
 
 test.describe("retired persona IDs in ?from= links resolve to their retained replacement", () => {
@@ -258,7 +330,7 @@ test("legacy ?result= links with a retired persona ID fall back gracefully", asy
 });
 
 // ---------------------------------------------------------------------------
-// 6. Safety degradation: corrupt / missing / out-of-bounds payloads
+// 7. Safety degradation: corrupt / missing / out-of-bounds payloads
 // ---------------------------------------------------------------------------
 
 test.describe("corrupt or invalid ?result= payloads fall back to hero", () => {
@@ -324,7 +396,7 @@ test.describe("corrupt or invalid ?result= payloads fall back to hero", () => {
 });
 
 // ---------------------------------------------------------------------------
-// 7. Poster consistency: persona image, hash, and QR code all match the page
+// 8. Poster consistency: persona image, hash, and QR code all match the page
 // ---------------------------------------------------------------------------
 
 test("poster contains the correct persona image, result hash and invite QR code", async ({ page }) => {
