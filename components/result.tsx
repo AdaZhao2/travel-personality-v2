@@ -731,13 +731,13 @@ export function Result({ persona, world, scores, analysis, answers, attemptId, f
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-10 rounded-[2rem] border-2 border-[#17142f] bg-[#120f28] p-5 text-white shadow-[7px_7px_0_#17142f] sm:p-7"
                   >
-                    <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-                      <div>
+                    <div className="flex flex-col justify-between gap-4 xl:flex-row xl:items-end">
+                      <div className="min-w-0">
                         <p className="text-xs font-black uppercase tracking-[.2em] text-[#c8ff55]">Map guide · 游玩地图攻略</p>
-                        <h4 className="display mt-2 text-balance text-4xl sm:text-5xl">验票完成，开始城堡夜游</h4>
+                        <h4 className="display mt-2 whitespace-nowrap text-lg sm:text-3xl lg:text-4xl xl:text-[2.5rem]">验票完成，开始城堡夜游</h4>
                         <p className="mt-3 max-w-2xl font-bold leading-relaxed text-white/70">路线已排好。每个点位都会带着订单号和探索者编号生成一张专属打卡图片。</p>
                       </div>
-                      <div className="rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black text-white/85">推荐路线：船屋 → 礼堂 → 移动楼梯 → 图书馆 → 天文塔</div>
+                      <div className="w-full overflow-x-auto whitespace-nowrap rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-[11px] font-black text-white/85 sm:text-sm xl:w-auto xl:min-w-[30rem] xl:text-center">推荐路线：船屋 → 礼堂 → 移动楼梯 → 图书馆 → 天文塔</div>
                     </div>
 
                     <div className="mt-7 grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,.9fr)]">
